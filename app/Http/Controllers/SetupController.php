@@ -7,24 +7,14 @@ use Illuminate\Support\Facades\Artisan;
 
 class SetupController extends Controller
 {
-    // Verify security token
-    private function checkToken(Request $request)
+    public function __construct()
     {
-        // Use the same token that is hardcoded in routes/web.php
-        $validToken = 'eKzPKHshLSTV5tgd';
-        $token = $request->query('token');
-        
-        if ($token !== $validToken) {
-            abort(403, 'Unauthorized access');
-        }
-        
-        return true;
+        $this->middleware(['auth:sanctum', 'role:admin', 'throttle:10,1']);
     }
 
     // Clear all caches
     public function clearCache(Request $request)
     {
-        $this->checkToken($request);
         
         $output = [];
         
@@ -58,7 +48,6 @@ class SetupController extends Controller
     // Regenerate cache for production
     public function optimizeCache(Request $request)
     {
-        $this->checkToken($request);
         
         $output = [];
         
@@ -84,7 +73,6 @@ class SetupController extends Controller
     // Rebuild frontend assets
     public function rebuildAssets(Request $request)
     {
-        $this->checkToken($request);
         
         $output = [];
         
