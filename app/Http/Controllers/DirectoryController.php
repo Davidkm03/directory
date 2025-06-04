@@ -46,8 +46,8 @@ class DirectoryController extends Controller
         // Procesar los resultados para incluir URLs de imágenes de perfil
         $results->getCollection()->transform(function ($profile) {
             // Añadir URL de imagen de perfil si existe
-            $profile->profile_image = $profile->user && $profile->user->profile_image_path 
-                ? asset('storage/' . $profile->user->profile_image_path) 
+            $profile->profile_image = $profile->user && $profile->user->profile_photo_path
+                ? asset('storage/' . $profile->user->profile_photo_path)
                 : asset('images/default-profile.jpg');
                 
             // Formatear servicios para mostrar
@@ -87,8 +87,8 @@ class DirectoryController extends Controller
                                ->findOrFail($id);
         
         // Añadir URL de imagen de perfil
-        $profile->profile_image = $profile->user && $profile->user->profile_image_path 
-            ? asset('storage/' . $profile->user->profile_image_path) 
+        $profile->profile_image = $profile->user && $profile->user->profile_photo_path
+            ? asset('storage/' . $profile->user->profile_photo_path)
             : asset('images/default-profile.jpg');
             
         // Formatear servicios para mostrar
@@ -283,8 +283,8 @@ class DirectoryController extends Controller
                           ->get()
                           ->map(function($profile) {
                               // Añadir URL de imagen de perfil
-                              $profile->profile_image = $profile->user && $profile->user->profile_image_path 
-                                  ? asset('storage/' . $profile->user->profile_image_path) 
+                          $profile->profile_image = $profile->user && $profile->user->profile_photo_path
+                                  ? asset('storage/' . $profile->user->profile_photo_path)
                                   : asset('images/default-profile.jpg');
                                   
                               return $profile;
