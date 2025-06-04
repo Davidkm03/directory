@@ -2,8 +2,8 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Prueba de CSS</title>
-    <!-- Usar estilos inline para asegurarnos de que funciona -->
+    <title>CSS Diagnostics</title>
+    <!-- Inline styles to ensure functionality -->
     <style>
         .test-box {
             padding: 1rem;
@@ -17,25 +17,25 @@
     <link href="http://127.0.0.1:8001/build/assets/app-D8IWtaEv.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Diagnóstico de CSS</h1>
+    <h1>CSS Diagnostics</h1>
     
-    <!-- Caja con estilos inline - esto debería verse bien siempre -->
+    <!-- Inline styles box - should always display correctly -->
     <div class="test-box">
-        Este recuadro usa estilos inline y debería verse azul con texto blanco.
+        This box uses inline styles and should appear blue with white text.
     </div>
     
-    <!-- Caja con clases de Tailwind - solo funciona si Tailwind carga -->
+    <!-- Tailwind classes box - works only if Tailwind loads -->
     <div class="p-4 m-4 bg-blue-500 text-white rounded-lg">
-        Si ves este texto en un recuadro azul con texto blanco, Tailwind funciona.
+        If you see this text inside a blue box with white text, Tailwind is working.
     </div>
     
     <hr>
     <div>
-        <h3>Información de depuración:</h3>
-        <p>URL del CSS: <code>{{ asset('build/assets/app-D8IWtaEv.css') }}</code></p>
-        <p>URL de la aplicación: <code>{{ config('app.url') }}</code></p>
-        <p>Ruta absoluta al archivo CSS: <code>{{ public_path('build/assets/app-D8IWtaEv.css') }}</code></p>
-        <p>¿El archivo existe? <code>{{ file_exists(public_path('build/assets/app-D8IWtaEv.css')) ? 'Sí' : 'No' }}</code></p>
+        <h3>Debug information:</h3>
+        <p>CSS URL: <code>{{ asset('build/assets/app-D8IWtaEv.css') }}</code></p>
+        <p>Application URL: <code>{{ config('app.url') }}</code></p>
+        <p>Absolute path to CSS: <code>{{ public_path('build/assets/app-D8IWtaEv.css') }}</code></p>
+        <p>File exists? <code>{{ file_exists(public_path('build/assets/app-D8IWtaEv.css')) ? 'Yes' : 'No' }}</code></p>
     </div>
 </body>
 </html>

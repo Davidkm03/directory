@@ -83,7 +83,7 @@ if (!file_exists(storage_path('installed'))) {
                         'role' => 'admin',
                         'email_verified_at' => now()
                     ]);
-                    echo "<p style='color:green;'>Usuario administrador actualizado: davidkm0393@gmail.com</p>";
+                    echo "<p style='color:green;'>Administrator user updated: davidkm0393@gmail.com</p>";
                 } else {
                     \App\Models\User::create([
                         'name' => 'Administrador',
@@ -99,11 +99,11 @@ if (!file_exists(storage_path('installed'))) {
                 echo "<p><a href='/'>Go to home page</a></p>";
             } catch (\Exception $e) {
                 echo "<p style='color:red;'>Error: " . $e->getMessage() . "</p>";
-                echo "<p>Información de la base de datos:</p>";
+                echo "<p>Database information:</p>";
                 echo "<ul>";
                 echo "<li>Host: " . config('database.connections.mysql.host') . "</li>";
-                echo "<li>Base de datos: " . config('database.connections.mysql.database') . "</li>";
-                echo "<li>Usuario: " . config('database.connections.mysql.username') . "</li>";
+                echo "<li>Database: " . config('database.connections.mysql.database') . "</li>";
+                echo "<li>User: " . config('database.connections.mysql.username') . "</li>";
                 echo "</ul>";
             }
             
@@ -153,11 +153,11 @@ if (!file_exists(storage_path('installed'))) {
                     if (count($users) > 0) {
                         echo "<ul>";
                         foreach ($users as $user) {
-                            echo "<li>" . $user->name . " (" . $user->email . ") - Rol: " . $user->role . "</li>";
+                            echo "<li>" . $user->name . " (" . $user->email . ") - Role: " . $user->role . "</li>";
                         }
                         echo "</ul>";
                     } else {
-                        echo "<p style='color:orange;'>No hay usuarios en la base de datos</p>";
+                        echo "<p style='color:orange;'>No users in the database</p>";
                     }
                 }
             } catch (\Exception $e) {

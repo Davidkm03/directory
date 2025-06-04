@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instalador - Instalación Completada - Comunidad Odontológica</title>
+    <title>Installer - Installation Complete - Dental Community</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50">
     <div class="min-h-screen flex flex-col justify-center py-12">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h1 class="text-4xl font-extrabold text-blue-800 tracking-tight">Comunidad Odontológica</h1>
-                <p class="mt-3 text-xl text-gray-600">Instalación Completada</p>
+                <h1 class="text-4xl font-extrabold text-blue-800 tracking-tight">Dental Community</h1>
+                <p class="mt-3 text-xl text-gray-600">Installation Complete</p>
             </div>
 
             <div class="bg-white shadow rounded-lg">
@@ -23,8 +23,8 @@
                             </svg>
                         </div>
                         <div class="ml-4">
-                            <h2 class="text-2xl font-semibold text-gray-800">¡Felicidades!</h2>
-                            <p class="mt-1 text-gray-600">La plataforma Comunidad Odontológica se ha instalado correctamente.</p>
+                            <h2 class="text-2xl font-semibold text-gray-800">Congratulations!</h2>
+                            <p class="mt-1 text-gray-600">The Dental Community platform has been installed successfully.</p>
                         </div>
                     </div>
                 </div>
@@ -38,15 +38,15 @@
                                 </svg>
                             </div>
                             <div class="ml-3">
-                                <h3 class="text-sm font-medium text-blue-800">Información importante</h3>
+                                <h3 class="text-sm font-medium text-blue-800">Important information</h3>
                                 <div class="mt-2 text-sm text-blue-700">
-                                    <p>Por razones de seguridad, debes eliminar la carpeta "installer" o deshabilitar el acceso al instalador.</p>
+                                    <p>For security reasons, you should remove the "installer" folder or disable access to it.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <h3 class="text-lg font-medium text-gray-900">Próximos pasos</h3>
+                    <h3 class="text-lg font-medium text-gray-900">Next steps</h3>
 
                     <ul class="space-y-3">
                         <li class="flex items-start">
@@ -56,8 +56,8 @@
                                 </svg>
                             </div>
                             <div class="ml-3">
-                                <h4 class="text-base font-medium text-gray-800">Iniciar sesión como administrador</h4>
-                                <p class="mt-1 text-sm text-gray-600">Utiliza las credenciales que ingresaste durante la instalación para acceder al panel de administración.</p>
+                                <h4 class="text-base font-medium text-gray-800">Log in as administrator</h4>
+                                <p class="mt-1 text-sm text-gray-600">Use the credentials you entered during installation to access the admin panel.</p>
                             </div>
                         </li>
                         <li class="flex items-start">
@@ -67,8 +67,8 @@
                                 </svg>
                             </div>
                             <div class="ml-3">
-                                <h4 class="text-base font-medium text-gray-800">Personalizar la plataforma</h4>
-                                <p class="mt-1 text-sm text-gray-600">Configura los ajustes específicos para tu comunidad odontológica desde el panel de administración.</p>
+                                <h4 class="text-base font-medium text-gray-800">Customize the platform</h4>
+                                <p class="mt-1 text-sm text-gray-600">Configure the specific settings for your dental community from the admin panel.</p>
                             </div>
                         </li>
                         <li class="flex items-start">
@@ -78,8 +78,8 @@
                                 </svg>
                             </div>
                             <div class="ml-3">
-                                <h4 class="text-base font-medium text-gray-800">Invitar a usuarios</h4>
-                                <p class="mt-1 text-sm text-gray-600">Comienza a crecer tu comunidad invitando a colegas profesionales de la odontología.</p>
+                                <h4 class="text-base font-medium text-gray-800">Invite users</h4>
+                                <p class="mt-1 text-sm text-gray-600">Start growing your community by inviting fellow dental professionals.</p>
                             </div>
                         </li>
                     </ul>
@@ -87,7 +87,7 @@
 
                 <div class="px-6 py-4 bg-gray-50 text-right rounded-b-lg">
                     <a href="{{ url('/') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Ir a la página principal
+                        Go to home page
                         <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
                         </svg>
@@ -96,7 +96,7 @@
             </div>
 
             <div class="mt-8 text-center text-sm text-gray-500">
-                &copy; {{ date('Y') }} Comunidad Odontológica. Todos los derechos reservados.
+                &copy; {{ date('Y') }} Dental Community. All rights reserved.
             </div>
         </div>
     </div>

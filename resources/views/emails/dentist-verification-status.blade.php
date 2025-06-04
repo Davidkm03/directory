@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Actualización de Estado de Verificación</title>
+    <title>Verification Status Update</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -54,44 +54,44 @@
 </head>
 <body>
     <div class="header">
-        <h1>Comunidad Odontológica</h1>
+        <h1>Dental Community</h1>
     </div>
     <div class="content">
-        <p>Hola {{ $name }},</p>
+        <p>Hello {{ $name }},</p>
         
-        <p>Queremos informarte que el estado de verificación de tu perfil profesional ha sido actualizado.</p>
+        <p>We would like to inform you that the verification status of your professional profile has been updated.</p>
         
-        <p>El estado actual de tu perfil es: 
+        <p>The current status of your profile is:
             @if($status == 'approved')
-                <span class="status-approved">APROBADO</span>
+                <span class="status-approved">APPROVED</span>
             @elseif($status == 'rejected')
-                <span class="status-rejected">RECHAZADO</span>
+                <span class="status-rejected">REJECTED</span>
             @else
-                <span class="status-pending">PENDIENTE</span>
+                <span class="status-pending">PENDING</span>
             @endif
         </p>
 
         @if($notes)
             <div class="notes">
-                <h3>Notas del equipo de verificación:</h3>
+                <h3>Notes from the verification team:</h3>
                 <p>{{ $notes }}</p>
             </div>
         @endif
 
         @if($status == 'approved')
-            <p>¡Felicidades! Tu perfil es ahora visible en nuestra comunidad. Los pacientes podrán encontrar tu información profesional y contactarte a través de la plataforma.</p>
+            <p>Congratulations! Your profile is now visible in our community. Patients will be able to find your professional information and contact you through the platform.</p>
         @elseif($status == 'rejected')
-            <p>Por favor, revisa las notas proporcionadas por nuestro equipo de verificación y realiza las correcciones necesarias. Una vez actualizadas, tu perfil volverá a entrar en proceso de revisión.</p>
+            <p>Please review the notes provided by our verification team and make the necessary corrections. Once updated, your profile will be reviewed again.</p>
         @else
-            <p>Tu perfil está siendo revisado por nuestro equipo de verificación. Te notificaremos cuando haya novedades.</p>
+            <p>Your profile is being reviewed by our verification team. We will notify you when there are updates.</p>
         @endif
 
-        <p>Para ver más detalles o realizar cambios, inicia sesión en tu cuenta y visita la sección "Mi Perfil Profesional".</p>
+        <p>To see more details or make changes, log in to your account and visit the "My Professional Profile" section.</p>
         
-        <p>¡Gracias por formar parte de nuestra comunidad!</p>
+        <p>Thank you for being part of our community!</p>
     </div>
     <div class="footer">
-        <p>© {{ date('Y') }} Comunidad Odontológica - Todos los derechos reservados</p>
+        <p>© {{ date('Y') }} Dental Community - All rights reserved</p>
     </div>
 </body>
 </html>
