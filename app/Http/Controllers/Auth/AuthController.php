@@ -29,7 +29,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Registro exitoso',
+            'message' => 'Registration successful',
             'user' => $user,
             'token' => $token,
         ], 201);
@@ -58,7 +58,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Registro exitoso',
+            'message' => 'Registration successful',
             'user' => $user,
             'token' => $token,
         ], 201);
@@ -73,7 +73,7 @@ class AuthController extends Controller
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['Las credenciales proporcionadas son incorrectas.'],
+                'email' => ['The provided credentials are incorrect.'],
             ]);
         }
 
@@ -83,7 +83,7 @@ class AuthController extends Controller
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message' => 'Inicio de sesión exitoso',
+            'message' => 'Login successful',
             'user' => $user,
             'token' => $token,
         ]);
@@ -97,7 +97,7 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Sesión cerrada correctamente',
+            'message' => 'Logged out successfully',
         ]);
     }
 

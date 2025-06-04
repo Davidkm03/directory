@@ -97,7 +97,7 @@ class InstallerController extends Controller
 
             return redirect()->route('installer.complete');
         } catch (Exception $e) {
-            return back()->withInput()->withErrors(['error' => 'Error de instalación: ' . $e->getMessage()]);
+            return back()->withInput()->withErrors(['error' => 'Installation error: ' . $e->getMessage()]);
         }
     }
 
@@ -155,7 +155,7 @@ class InstallerController extends Controller
             
             return true;
         } catch (PDOException $e) {
-            throw new Exception('No se pudo conectar a la base de datos: ' . $e->getMessage());
+            throw new Exception('Could not connect to the database: ' . $e->getMessage());
         }
     }
 
@@ -220,7 +220,7 @@ class InstallerController extends Controller
             
             return true;
         } catch (Exception $e) {
-            throw new Exception('Error ejecutando migraciones: ' . $e->getMessage());
+            throw new Exception('Error running migrations: ' . $e->getMessage());
         }
     }
 
@@ -240,7 +240,7 @@ class InstallerController extends Controller
             
             return $user;
         } catch (Exception $e) {
-            throw new Exception('Error creando usuario administrador: ' . $e->getMessage());
+            throw new Exception('Error creating admin user: ' . $e->getMessage());
         }
     }
 
@@ -250,7 +250,7 @@ class InstallerController extends Controller
     private function setAsInstalled()
     {
         // Crear archivo que indica que la aplicación está instalada
-        File::put(storage_path('installed'), 'Instalación completada el ' . date('Y-m-d H:i:s'));
+        File::put(storage_path('installed'), 'Installation completed on ' . date('Y-m-d H:i:s'));
         
         // Optimizar la aplicación
         Artisan::call('optimize:clear');

@@ -232,7 +232,7 @@ class DirectoryController extends Controller
     public function toggleFavorite(Request $request, $id)
     {
         if (!auth()->check()) {
-            return response()->json(['message' => 'Debes iniciar sesión para marcar favoritos'], 401);
+            return response()->json(['message' => 'You must be logged in to mark favorites'], 401);
         }
         
         $user = auth()->user();
@@ -244,12 +244,12 @@ class DirectoryController extends Controller
         if ($favorite) {
             // Si ya existe, lo eliminamos
             $user->favoriteDentists()->detach($id);
-            $message = 'Dentista eliminado de favoritos';
+            $message = 'Dentist removed from favorites';
             $isFavorite = false;
         } else {
             // Si no existe, lo agregamos
             $user->favoriteDentists()->attach($id);
-            $message = 'Dentista agregado a favoritos';
+            $message = 'Dentist added to favorites';
             $isFavorite = true;
         }
         
@@ -268,7 +268,7 @@ class DirectoryController extends Controller
     public function getFavorites(Request $request)
     {
         if (!auth()->check()) {
-            return response()->json(['message' => 'Debes iniciar sesión para ver favoritos'], 401);
+            return response()->json(['message' => 'You must be logged in to view favorites'], 401);
         }
         
         $user = auth()->user();
