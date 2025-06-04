@@ -7,6 +7,13 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Setup Instructions
+
+1. Copy `.env.example` to `.env` and configure your database connection.
+2. Set `ADMIN_EMAIL` and `ADMIN_PASSWORD` in the `.env` file. These credentials are used when running the setup command below.
+3. Run `php artisan app:setup-db` to execute migrations and create the initial admin user.
+
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

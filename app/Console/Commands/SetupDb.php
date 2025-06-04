@@ -14,7 +14,7 @@ class SetupDb extends Command
      *
      * @var string
      */
-    protected $signature = 'app:setup-db {--admin-email=davidkm0393@gmail.com} {--admin-password=Dios1234} {--admin-name=Administrador}';
+    protected $signature = 'app:setup-db {--admin-email=} {--admin-password=} {--admin-name=Administrador}';
 
     /**
      * The console command description.
@@ -47,9 +47,14 @@ class SetupDb extends Command
         $this->call('migrate', ['--force' => true]);
         
         // Crear usuario administrador
-        $email = $this->option('admin-email');
-        $password = $this->option('admin-password');
+        $email = $this->option('admin-email') ?: env('ADMIN_EMAIL');
+        $password = $this->option('admin-password') ?: env('ADMIN_PASSWORD');
         $name = $this->option('admin-name');
+
+        if (!$email || !$password) {
+            $this->error('Admin email and password are required. Provide them as options or set ADMIN_EMAIL and ADMIN_PASSWORD in .env');
+            return 1;
+        }
         
         $this->info('Creando usuario administrador...');
         
