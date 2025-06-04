@@ -1,0 +1,332 @@
+<script lang="ts">
+import { defineComponent, onMounted, reactive, computed, ref, watch, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
+import DirectoryFilters from '../../components/directory/DirectoryFilters.vue';
+import DentistCard from '../../components/directory/DentistCard.vue';
+import MapView from '../../components/directory/MapView.vue';
+import DirectoryService from '../../services/DirectoryService';
+import { DirectoryState, MapMarker, DirectoryFilters as DirectoryFiltersType } from '../../types/directory';
+import { DentistProfile } from '../../types/dentist';
+import { useAuth } from '../../composables/useAuth';
+
+export default defineComponent({
+  name: 'DirectoryIndex',
+  
+  components: {
+    DirectoryFilters,
+    DentistCard,
+    MapView
+  },
+  
+  setup() {
+    const router = useRouter();
+    const { isAuthenticated } = useAuth();
+    const observer = ref<IntersectionObserver | null>(null);
+    const showingFavorites = ref(false);
+    
+    // Estado del directorio
+    const directoryState = reactive<DirectoryState>({
+      profiles: [],
+      favorites: [],
+      filterOptions: null,
+      loading: false,
+      error: null,
+      favoritesLoading: false,
+      currentPage: 1,
+      lastPage: 1,
+      totalResults: 0,
+      infiniteLoading: false,
+      viewMode: 'grid',
+      mapCenter: { lat: 19.4326, lng: -99.1332 }, // Ciudad de México por defecto
+      mapZoom: 12,
+      filters: {
+        search: '',
+        specialty: '',
+        services: [],
+        location: '',
+        languages: [],
+        minExperience: 0,
+        sortBy: 'rating',
+        sortDir: 'desc',
+        perPage: 12,
+        page: 1
+      }
+    });
+    
+    // Cargar dentistas y opciones de filtros
+    const loadDentists = async (resetPagination = true) => {
+      if (resetPagination) {
+        directoryState.currentPage = 1;
+        directoryState.profiles = [];
+      }
+      
+      directoryState.loading = true;
+      directoryState.error = null;
+      
+      try {
+        // Preparar los parámetros según el estado actual
+        const params = {
+          ...directoryState.filters,
+          page: directoryState.currentPage,
+          favorites_only: showingFavorites.value
+        };
+        
+        // Solicitar dentistas
+        const response = await DirectoryService.getDentists(params);
+        
+        if (response.data) {
+          // Si es primera página o resetPagination, reemplazar la lista
+          if (directoryState.currentPage === 1 || resetPagination) {
+            directoryState.profiles = response.data;
+          } else {
+            // Añadir a la lista existente (para scroll infinito)
+            directoryState.profiles = [...directoryState.profiles, ...response.data];
+          }
+          
+          directoryState.currentPage = response.current_page;
+          directoryState.lastPage = response.last_page;
+          directoryState.totalResults = response.total;
+        }
+        
+        // Cargar favoritos si el usuario está autenticado
+        if (isAuthenticated.value && !directoryState.favorites.length) {
+          loadFavorites();
+        }
+      } catch (error) {
+        console.error('Error al cargar dentistas:', error);
+        directoryState.error = 'No se pudieron cargar los dentistas. Por favor, inténtalo de nuevo.';
+      } finally {
+        directoryState.loading = false;
+        directoryState.infiniteLoading = false;
+      }
+    };
+    
+    // Cargar opciones de filtros
+    const loadFilterOptions = async () => {
+      try {
+        const options = await DirectoryService.getFilterOptions();
+        directoryState.filterOptions = options;
+      } catch (error) {
+        console.error('Error al cargar opciones de filtros:', error);
+      }
+    };
+    
+    // Cargar favoritos del usuario
+    const loadFavorites = async () => {
+      if (!isAuthenticated.value) return;
+      
+      try {
+        directoryState.favoritesLoading = true;
+        const favorites = await DirectoryService.getFavorites();
+        
+        if (favorites && Array.isArray(favorites)) {
+          directoryState.favorites = favorites.map(f => f.id);
+        }
+      } catch (error) {
+        console.error('Error al cargar favoritos:', error);
+      } finally {
+        directoryState.favoritesLoading = false;
+      }
+    };
+    
+    // Alternar favorito
+    const toggleFavorite = async (dentistId: number) => {
+      if (!isAuthenticated.value) {
+        // Redirigir a login si no está autenticado
+        router.push({ name: 'login', query: { redirect: router.currentRoute.value.fullPath } });
+        return;
+      }
+      
+      try {
+        const response = await DirectoryService.toggleFavorite(dentistId);
+        
+        // Actualizar estado local
+        if (response.isFavorite) {
+          if (!directoryState.favorites.includes(dentistId)) {
+            directoryState.favorites.push(dentistId);
+          }
+        } else {
+          directoryState.favorites = directoryState.favorites.filter(id => id !== dentistId);
+          
+          // Si estamos viendo solo favoritos, recargar para eliminar el dentista de la vista
+          if (showingFavorites.value) {
+            loadDentists();
+          }
+        }
+      } catch (error) {
+        console.error('Error al alternar favorito:', error);
+      }
+    };
+    
+    // Manejar cambio de favorito desde el componente de tarjeta
+    const handleFavoriteToggled = ({ dentistId, isFavorite }: { dentistId: number, isFavorite: boolean }) => {
+      if (isFavorite) {
+        if (!directoryState.favorites.includes(dentistId)) {
+          directoryState.favorites.push(dentistId);
+        }
+      } else {
+        directoryState.favorites = directoryState.favorites.filter(id => id !== dentistId);
+        
+        // Si estamos viendo solo favoritos, recargar para eliminar el dentista de la vista
+        if (showingFavorites.value) {
+          loadDentists();
+        }
+      }
+    };
+    
+    // Ver perfil de dentista
+    const viewDentistProfile = (dentist: DentistProfile) => {
+      router.push({ 
+        name: 'dentist-profile', 
+        params: { id: dentist.id },
+      });
+    };
+    
+    // Alternar vista de favoritos
+    const toggleFavoritesView = () => {
+      showingFavorites.value = !showingFavorites.value;
+      loadDentists();
+    };
+    
+    // Reset filtros
+    const resetFilters = () => {
+      directoryState.filters = {
+        search: '',
+        specialty: '',
+        services: [],
+        location: '',
+        languages: [],
+        minExperience: 0,
+        sortBy: 'rating',
+        sortDir: 'desc',
+        perPage: 12,
+        page: 1
+      };
+      loadDentists();
+    };
+    
+    // Cambiar página
+    const changePage = (page: number) => {
+      if (page < 1 || page > directoryState.lastPage) return;
+      
+      directoryState.currentPage = page;
+      directoryState.filters.page = page;
+      
+      // En modo mapa no hacemos scroll hacia arriba
+      if (directoryState.viewMode !== 'map') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      
+      loadDentists(false);
+    };
+    
+    // Obtener números de página para paginador
+    const getPageNumbers = () => {
+      const { currentPage, lastPage } = directoryState;
+      const delta = 2; // Número de páginas a mostrar a cada lado de la actual
+      const range: (number | string)[] = [];
+      
+      for (let i = 1; i <= lastPage; i++) {
+        if (
+          i === 1 ||
+          i === lastPage ||
+          (i >= currentPage - delta && i <= currentPage + delta)
+        ) {
+          range.push(i);
+        } else if (i === currentPage - delta - 1 || i === currentPage + delta + 1) {
+          range.push('...');
+        }
+      }
+      
+      return range;
+    };
+    
+    // Obtener marcadores para el mapa
+    const getMapMarkers = (): MapMarker[] => {
+      return directoryState.profiles
+        .filter(profile => profile.latitude && profile.longitude)
+        .map(profile => ({
+          id: profile.id,
+          lat: profile.latitude!,
+          lng: profile.longitude!,
+          name: profile.user?.name || '',
+          ...profile // Incluir todos los datos del perfil para mostrar en infowindow
+        }));
+    };
+    
+    // Manejar clic en marcador del mapa
+    const handleMarkerClick = (dentistId: number) => {
+      // Si estamos en el modo de mapa, no hacemos nada más que mostrar la info
+      // La lógica adicional para mostrar detalles se maneja en el componente MapView
+    };
+    
+    // Manejar cambio de límites del mapa
+    const handleBoundsChanged = (bounds: { ne: { lat: number, lng: number }, sw: { lat: number, lng: number } }) => {
+      if (directoryState.viewMode === 'map') {
+        // Opcional: cargar dentistas dentro de estos límites geográficos
+        // En este momento, usaremos esto solo para guardar la posición del mapa
+      }
+    };
+    
+    // Configurar scroll infinito
+    const setupInfiniteScroll = () => {
+      if (observer.value) {
+        observer.value.disconnect();
+      }
+      
+      observer.value = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting && !directoryState.loading && directoryState.currentPage < directoryState.lastPage) {
+          directoryState.infiniteLoading = true;
+          directoryState.currentPage++;
+          loadDentists(false);
+        }
+      });
+      
+      // Observar un elemento al final de la lista
+      const sentinel = document.querySelector('.infinite-scroll-sentinel');
+      if (sentinel) {
+        observer.value.observe(sentinel);
+      }
+    };
+    
+    // Observar cambios en el modo de vista
+    watch(() => directoryState.viewMode, (newMode) => {
+      // Si cambiamos a vista de mapa y no hay coordenadas, usar filtros de ubicación
+      if (newMode === 'map') {
+        // Aquí podríamos ajustar el centro del mapa basado en los resultados o filtros
+      }
+    });
+    
+    // Montar componente
+    onMounted(async () => {
+      // Cargar opciones de filtros
+      await loadFilterOptions();
+      
+      // Cargar dentistas
+      await loadDentists();
+      
+      // Configurar scroll infinito
+      nextTick(() => {
+        setupInfiniteScroll();
+      });
+    });
+    
+    return {
+      directoryState,
+      isAuthenticated,
+      showingFavorites,
+      loadDentists,
+      resetFilters,
+      changePage,
+      getPageNumbers,
+      getMapMarkers,
+      handleMarkerClick,
+      handleBoundsChanged,
+      toggleFavorite,
+      viewDentistProfile,
+      toggleFavoritesView,
+      handleFavoriteToggled
+    };
+  }
+});
+</script>

@@ -1,0 +1,62 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Prevenir bucles infinitos de redirección
+    RewriteCond %{ENV:REDIRECT_STATUS} ^$
+    
+    # Permitir acceso a setup/db y setup/diagnostico
+    RewriteRule ^setup/(db|diagnostico) - [L]
+
+    # Permitir acceso directo a archivos estáticos
+    RewriteCond %{REQUEST_URI} !\.(css|js|png|jpe?g|gif|svg|woff2?|ttf|eot|ico)$ [NC]
+    
+    # Permitir acceso directo a la API
+    RewriteCond %{REQUEST_URI} !^/api [NC]
+        
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L,QSA]
+</IfModule>
+
+# Establecer la página de índice por defecto
+DirectoryIndex index.php
+
+# PHP Settings para hosting compartido
+<IfModule mod_php8.c>
+    php_value upload_max_filesize 64M
+    php_value post_max_size 64M
+    php_value max_execution_time 300
+    php_value max_input_time 300
+</IfModule>
+
+# Compresión GZIP para mejorar rendimiento
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+</IfModule>
+
+# Cabeceras para SPA
+<IfModule mod_headers.c>
+    # Establecer cabeceras de caché para archivos estáticos
+    <FilesMatch "\.(ico|pdf|jpg|jpeg|png|gif|js|css|woff2?|ttf|eot|svg)$">
+        Header set Cache-Control "max-age=31536000, public"
+    </FilesMatch>
+    
+    # No guardar en caché archivos HTML y datos
+    <FilesMatch "\.(html|htm|php|json)$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+    </FilesMatch>
+</IfModule>
